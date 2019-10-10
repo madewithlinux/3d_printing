@@ -1,92 +1,252 @@
-# This file contains pin mappings for the 2017 Creality CR-10S. To use
-# this config, the firmware should be compiled for the AVR atmega2560.
+#!/usr/bin/env bash
+# This file contains common pin mappings for the BIGTREETECH SKR V1.3
+# board. To use this config, the firmware should be compiled for the
+# LPC1768.
 
 # See the example.cfg file for a description of available parameters.
 
 [stepper_x]
-step_pin: ar54
-dir_pin: ar55
-enable_pin: !ar38
+step_pin: P2.2
+dir_pin: !P2.6
+enable_pin: !P2.1
 step_distance: .0125
-endstop_pin: ^ar3
-position_endstop: 0
-position_max: 300
+#endstop_pin: P1.29  # P1.28 for X-max
+endstop_pin: tmc2130_stepper_x:virtual_endstop
+homing_retract_dist: 0
+position_endstop: -1
+position_min: -1
+position_max: 320
 homing_speed: 50
 
 [stepper_y]
-step_pin: ar60
-dir_pin: ar61
-enable_pin: !ar56
+step_pin: P0.19
+dir_pin: !P0.20
+enable_pin: !P2.8
 step_distance: .0125
-endstop_pin: ^ar14
-position_endstop: 0
+#endstop_pin: P1.27  # P1.26 for Y-max
+endstop_pin: tmc2130_stepper_y:virtual_endstop
+homing_retract_dist: 0
+position_endstop: -15
+position_min: -15
 position_max: 300
 homing_speed: 50
 
 [stepper_z]
-step_pin: ar46
-dir_pin: !ar48
-enable_pin: !ar62
-step_distance: .0025
-endstop_pin: ^ar18
+step_pin: P0.22
+dir_pin: P2.11
+enable_pin: !P0.21
+step_distance: 0.00015625
+endstop_pin: P1.25  # P1.24 for Z-max
 position_endstop: 0.5
 position_max: 400
+homing_speed: 25
+second_homing_speed: 2.5
 
 [extruder]
-step_pin: ar26
-dir_pin: !ar28
-enable_pin: !ar24
-step_distance: 0.00246305418
-nozzle_diameter: 0.8
-filament_diameter: 1.70
-heater_pin: ar10
+step_pin: P2.13
+dir_pin: !P0.11
+enable_pin: !P2.12
+step_distance: 0.00178571428571428571
+nozzle_diameter: 0.400
+filament_diameter: 1.750
+heater_pin: P2.7
 sensor_type: EPCOS 100K B57560G104F
-sensor_pin: analog13
-#control: pid
-#pid_Kp: 22.92
-#pid_Ki: 1.38
-#pid_Kd: 95.28
+sensor_pin: P0.24
+control = pid
+pid_kp = 26.025
+pid_ki = 1.701
+pid_kd = 99.545
 min_temp: 0
-max_temp: 285
+max_temp: 260
 
 [heater_bed]
-heater_pin: ar8
+heater_pin: P2.5
 sensor_type: ATC Semitec 104GT-2
-sensor_pin: analog14
-control: pid
-pid_Kp: 690.34
-pid_Ki: 111.47
-pid_Kd: 1068.83
+sensor_pin: P0.23
+control = pid
+pid_Kp = 71.124
+pid_Ki = 1.607
+pid_Kd = 786.809
 min_temp: 0
 max_temp: 130
 
-[fan]
-pin: ar9
+# [fan]
+# pin: P2.3
 
 [mcu]
-serial: /dev/serial/by-id/usb-FTDI_FT232R_USB_UART_AM00CDB8-if00-port0
-pin_map: arduino
+serial: /dev/serial/by-id/usb-Klipper_Klipper_firmware_12345-if00
 
 [printer]
-kinematics: cartesian
-max_velocity: 300
-max_accel: 3000
-max_z_velocity: 5
+kinematics: corexy
+max_velocity: 500
+max_accel: 4000
+max_z_velocity: 25
 max_z_accel: 100
+square_corner_velocity: 40
 
-[display]
-lcd_type: st7920
-cs_pin: ar16
-sclk_pin: ar23
-sid_pin: ar17
-encoder_pins: ^ar33, ^ar31
-click_pin: ^!ar35
+[homing_override]
+axes: xyz
+gcode:
+    G28 Z0
+    G0 Z10 F1500
+    G28 X0 Y0
 
-#*# <---------------------- SAVE_CONFIG ---------------------->
-#*# DO NOT EDIT THIS BLOCK OR BELOW. The contents are auto-generated.
-#*#
-#*# [extruder]
-#*# control = pid
-#*# pid_kp = 29.471
-#*# pid_ki = 1.802
-#*# pid_kd = 120.462
+
+########################################
+# TMC2130 configuration
+########################################
+
+# For TMC SPI
+#   1) Place jumpers on all the red pin headers under the stepper drivers
+#   2) Remove jumpers from the red pin headers labeled XUART (XUART, YUART etc.)
+
+[tmc2130 stepper_x]
+cs_pin: P1.17
+spi_software_miso_pin: P0.5
+spi_software_mosi_pin: P4.28
+spi_software_sclk_pin: P0.4
+diag1_pin: !P1.29
+microsteps: 16
+run_current: 1.25
+hold_current: 0.500
+stealthchop_threshold: 0
+driver_SGT: 2  # tuning value for sensorless homing, set to 0 as a start
+
+[tmc2130 stepper_y]
+cs_pin: P1.15
+spi_software_miso_pin: P0.5
+spi_software_mosi_pin: P4.28
+spi_software_sclk_pin: P0.4
+diag1_pin: !P1.27
+microsteps: 16
+run_current: 1.25
+hold_current: 0.500
+stealthchop_threshold: 0
+driver_SGT: 2  # tuning value for sensorless homing, set to 0 as a start
+
+[tmc2130 stepper_z]
+cs_pin: P1.10
+spi_software_miso_pin: P0.5
+spi_software_mosi_pin: P4.28
+spi_software_sclk_pin: P0.4
+#diag1_pin: P1.25
+microsteps: 256
+run_current: 1.00
+hold_current: 0.50
+stealthchop_threshold: 0
+
+[tmc2130 extruder]
+cs_pin: P1.8
+spi_software_miso_pin: P0.5
+spi_software_mosi_pin: P4.28
+spi_software_sclk_pin: P0.4
+#diag1_pin: P1.28
+microsteps: 16
+run_current: 0.800
+hold_current: 0.500
+stealthchop_threshold: 0
+
+#[tmc2130 extruder1]
+#cs_pin: P1.1
+#spi_software_miso_pin: P0.5
+#spi_software_mosi_pin: P4.28
+#spi_software_sclk_pin: P0.4
+##diag1_pin: P1.26
+#microsteps: 16
+#run_current: 0.800
+#hold_current: 0.500
+#stealthchop_threshold: 0
+
+
+########################################
+# EXP1 / EXP2 (display) pins
+########################################
+
+[board_pins]
+aliases:
+    # EXP1 header
+    EXP1_1=P1.30, EXP1_3=P1.18, EXP1_5=P1.20, EXP1_7=P1.22, EXP1_9=<GND>,
+    EXP1_2=P0.28, EXP1_4=P1.19, EXP1_6=P1.21, EXP1_8=P1.23, EXP1_10=<5V>,
+    # EXP2 header
+    EXP2_1=P0.17, EXP2_3=P3.26, EXP2_5=P3.25, EXP2_7=P1.31, EXP2_9=<GND>,
+    EXP2_2=P0.15, EXP2_4=P0.16, EXP2_6=P0.18, EXP2_8=<RST>, EXP2_10=<NC>
+    # Pins EXP2_1, EXP2_6, EXP2_2 are also MISO, MOSI, SCK of bus "ssp0"
+
+# See the sample-lcd.cfg file for definitions of common LCD displays.
+
+
+[heater_fan my_nozzle_fan]
+pin: P2.3
+max_power: 0.5
+shutdown_speed: 0
+cycle_time: 0.010
+hardware_pwm: False
+heater: extruder
+  # Name of the config section defining the heater that this fan is
+  # associated with. If a comma separated list of heater names is
+  # provided here, then the fan will be enabled when any of the given
+  # heaters are enabled. The default is "extruder".
+heater_temp: 50.0
+  # A temperature (in Celsius) that the heater must drop below before
+  # the fan is disabled. The default is 50 Celsius.
+fan_speed: 1.0
+  # The fan speed (expressed as a value from 0.0 to 1.0) that the fan
+  # will be set to when its associated heater is enabled. The default
+  # is 1.0
+
+
+
+# Z height probe. One may define this section to enable Z height
+# probing hardware. When this section is enabled, PROBE and
+# QUERY_PROBE extended g-code commands become available. The probe
+# section also creates a virtual "probe:z_virtual_endstop" pin. One
+# may set the stepper_z endstop_pin to this virtual pin on cartesian
+# style printers that use the probe in place of a z endstop. If using
+# "probe:z_virtual_endstop" then do not define a position_endstop in
+# the stepper_z config section.
+[probe]
+pin: !P1.24
+#   Probe detection pin. This parameter must be provided.
+x_offset: 0.0
+#   The distance (in mm) between the probe and the nozzle along the
+#   x-axis. The default is 0.
+y_offset: 0.0
+#   The distance (in mm) between the probe and the nozzle along the
+#   y-axis. The default is 0.
+z_offset: 0.75
+#   The distance (in mm) between the bed and the nozzle when the probe
+#   triggers. This parameter must be provided.
+speed: 5.0
+#   Speed (in mm/s) of the Z axis when probing. The default is 5mm/s.
+samples: 3
+#   The number of times to probe each point. The probed z-values will
+#   be averaged. The default is to probe 1 time.
+sample_retract_dist: 2.0
+#   The distance (in mm) to lift the toolhead between each sample (if
+#   sampling more than once). The default is 2mm.
+samples_result: average
+#   The calculation method when sampling more than once - either
+#   "median" or "average". The default is average.
+samples_tolerance: 0.100
+#   The maximum Z distance (in mm) that a sample may differ from other
+#   samples. If this tolerance is exceeded then either an error is
+#   reported or the attempt is restarted (see
+#   samples_tolerance_retries). The default is 0.100mm.
+#samples_tolerance_retries: 0
+#   The number of times to retry if a sample is found that exceeds
+#   samples_tolerance. On a retry, all current samples are discarded
+#   and the probe attempt is restarted. If a valid set of samples are
+#   not obtained in the given number of retries then an error is
+#   reported. The default is zero which causes an error to be reported
+#   on the first sample that exceeds samples_tolerance.
+#activate_gcode:
+#   A list of G-Code commands to execute prior to each probe attempt.
+#   See docs/Command_Templates.md for G-Code format. This may be
+#   useful if the probe needs to be activated in some way. Do not
+#   issue any commands here that move the toolhead (eg, G1). The
+#   default is to not run any special G-Code commands on activation.
+#deactivate_gcode:
+#   A list of G-Code commands to execute after each probe attempt
+#   completes. See docs/Command_Templates.md for G-Code format. Do not
+#   issue any commands here that move the toolhead. The default is to
+#   not run any special G-Code commands on deactivation.
