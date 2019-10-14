@@ -195,6 +195,13 @@ fan_speed: 1.0
   # is 1.0
 
 
+[fan]
+pin: P2.4
+max_power: 0.5
+cycle_time: 0.010
+kick_start_time: 0.500
+
+
 
 # Z height probe. One may define this section to enable Z height
 # probing hardware. When this section is enabled, PROBE and
@@ -228,25 +235,4 @@ samples_result: average
 #   The calculation method when sampling more than once - either
 #   "median" or "average". The default is average.
 samples_tolerance: 0.100
-#   The maximum Z distance (in mm) that a sample may differ from other
-#   samples. If this tolerance is exceeded then either an error is
-#   reported or the attempt is restarted (see
-#   samples_tolerance_retries). The default is 0.100mm.
-#samples_tolerance_retries: 0
-#   The number of times to retry if a sample is found that exceeds
-#   samples_tolerance. On a retry, all current samples are discarded
-#   and the probe attempt is restarted. If a valid set of samples are
-#   not obtained in the given number of retries then an error is
-#   reported. The default is zero which causes an error to be reported
-#   on the first sample that exceeds samples_tolerance.
-#activate_gcode:
-#   A list of G-Code commands to execute prior to each probe attempt.
-#   See docs/Command_Templates.md for G-Code format. This may be
-#   useful if the probe needs to be activated in some way. Do not
-#   issue any commands here that move the toolhead (eg, G1). The
-#   default is to not run any special G-Code commands on activation.
-#deactivate_gcode:
-#   A list of G-Code commands to execute after each probe attempt
-#   completes. See docs/Command_Templates.md for G-Code format. Do not
-#   issue any commands here that move the toolhead. The default is to
-#   not run any special G-Code commands on deactivation.
+
