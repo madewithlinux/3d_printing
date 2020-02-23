@@ -35,7 +35,7 @@ homing_speed: 50
 step_pin: P0.22
 dir_pin: P2.11
 enable_pin: !P0.21
-step_distance: 0.00015625
+step_distance: 0.0025
 endstop_pin: P1.25  # P1.24 for Z-max
 position_endstop: 0.5
 position_max: 400
@@ -83,8 +83,8 @@ serial: /dev/serial/by-id/usb-Klipper_Klipper_firmware_12345-if00
 kinematics: corexy
 max_velocity: 500
 max_accel: 4000
-max_z_velocity: 25
-max_z_accel: 100
+max_z_velocity: 35 # experimentally determined to be max
+max_z_accel: 80
 square_corner_velocity: 40
 
 # [homing_override]
@@ -133,7 +133,7 @@ spi_software_miso_pin: P0.5
 spi_software_mosi_pin: P4.28
 spi_software_sclk_pin: P0.4
 #diag1_pin: P1.25
-microsteps: 256
+microsteps: 16
 run_current: 1.00
 hold_current: 0.50
 stealthchop_threshold: 0
@@ -180,18 +180,14 @@ aliases:
 
 [heater_fan my_nozzle_fan]
 pin: P2.3
-max_power: 0.5
+#max_power: 0.5
+#heater_temp: 50.0
+max_power: 1.00
+heater_temp: 20.0
 shutdown_speed: 0
 cycle_time: 0.010
 hardware_pwm: False
 heater: extruder
-  # Name of the config section defining the heater that this fan is
-  # associated with. If a comma separated list of heater names is
-  # provided here, then the fan will be enabled when any of the given
-  # heaters are enabled. The default is "extruder".
-heater_temp: 50.0
-  # A temperature (in Celsius) that the heater must drop below before
-  # the fan is disabled. The default is 50 Celsius.
 fan_speed: 1.0
   # The fan speed (expressed as a value from 0.0 to 1.0) that the fan
   # will be set to when its associated heater is enabled. The default
