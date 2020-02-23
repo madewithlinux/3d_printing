@@ -179,11 +179,9 @@ aliases:
 
 
 [heater_fan my_nozzle_fan]
-pin: P2.3
-#max_power: 0.5
-#heater_temp: 50.0
-max_power: 1.00
-heater_temp: 20.0
+pin: P2.4
+max_power: 0.5
+cycle_time: 0.010
 shutdown_speed: 0
 cycle_time: 0.010
 hardware_pwm: False
@@ -195,24 +193,25 @@ fan_speed: 1.0
 
 
 [fan]
-pin: P2.4
-max_power: 0.5
+pin: P2.3
+max_power: 1.0
 cycle_time: 0.010
 kick_start_time: 0.500
 
 
+# PROBE_ACCURACY PROBE_SPEED=2 SAMPLES=10 SAMPLE_RETRACT_DIST=1
 [probe]
 pin: !P1.24
 x_offset: 0.0
 y_offset: 0.0
 # maybe this is wrong?
 # I had to use SET_GCODE_OFFSET Z=-0.25 to get it to work well
-z_offset: 0.25
-speed: 2 # in mm/s
-samples: 2
-sample_retract_dist: 2.0
-samples_result: average
-samples_tolerance: 0.100
+z_offset: 0.15
+speed: 3 # in mm/s
+samples: 1
+sample_retract_dist: 1.0
+# samples_result: average
+# samples_tolerance: 0.100
 
 [bed_mesh]
 speed: 100 # mm/s
